@@ -175,7 +175,7 @@ async function getCoordinates(city, state) {
 
 async function getDistance(origin, destination) {
   const response = await fetch(
-    `http://router.project-osrm.org/route/v1/driving/${origin.lon},${origin.lat};${destination.lon},${destination.lat}?overview=false`
+    `https://router.project-osrm.org/route/v1/driving/${origin.lon},${origin.lat};${destination.lon},${destination.lat}?overview=false`
   );
   const data = await response.json();
   if (data && data.routes && data.routes[0] && data.routes[0].distance) {

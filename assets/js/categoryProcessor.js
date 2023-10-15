@@ -1,15 +1,17 @@
-const mainListing = document.getElementById("main-listing");
-const categoryHeader = document.querySelector(
+const MAIN_LISTING = document.getElementById("main-listing");
+const CATEGORY_HEADER = document.querySelector(
   ".category-listing-container__heading"
 );
-const moreRestaurants = document.getElementById("more-restaurants-listing");
-const searchElement = document.getElementsByName("search")[0];
-let searchString = "";
-searchElement.addEventListener("keyup", (event) => {
+const MORE_RESTAURANTS = document.getElementById("more-restaurants-listing");
+const SEARCH_ELEMENT = document.getElementsByName("search")[0];
+const RATING_THRESHOLD = 3.6;
+const DISTANCE_LIMIT = 250;
+
+SEARCH_ELEMENT.addEventListener("keyup", (event) => {
   if (event.key === "Enter") {
-    searchString = searchElement.value.toLowerCase();
-    searchElement.value = "";
-    selectNearbyRestaurants();
+    const searchString = SEARCH_ELEMENT.value.toLowerCase();
+    SEARCH_ELEMENT.value = "";
+    selectNearbyRestaurants(searchString);
   }
 });
 
@@ -46,116 +48,142 @@ export const processCategory = (category) => {
   }
 };
 
-const processOtherRestaurants = () => {
-  for (const restaurant of otherRestaurantList) {
-    let card = document.createElement("div");
-    card.classList.add("other-card");
-    card.innerText = restaurant.name;
+let workCompleted = false;
 
-    moreRestaurants.appendChild(card);
+const createRestaurantCard = (restaurant, rating) => {
+  const card = document.createElement("div");
+  card.classList.add("restaurant-card");
+  card.dataset.restaurantID = restaurant.id;
+
+  const image = document.createElement("div");
+  image.classList.add("restaurant-card__image");
+  image.style.backgroundImage = `url(${restaurant.image})`;
+  card.appendChild(image);
+
+  const container = document.createElement("div");
+  container.classList.add("restaurant-card__container");
+
+  const nameContainer = document.createElement("div");
+  nameContainer.classList.add("restaurant-card__name__container");
+
+  const restaurantName = document.createElement("p");
+  restaurantName.classList.add("restaurant-card__name");
+  restaurantName.innerText = restaurant.name;
+  nameContainer.appendChild(restaurantName);
+
+  const ratingContainer = document.createElement("div");
+  ratingContainer.classList.add("restaurant-card__rating__container");
+  ratingContainer.textContent = `${rating.toFixed(1)} ⭐`;
+
+  container.appendChild(nameContainer);
+  container.appendChild(ratingContainer);
+  card.appendChild(container);
+
+  return card;
+};
+
+const processOtherRestaurants = (cards) => {
+  for (const card of cards) {
+    MORE_RESTAURANTS.appendChild(card);
   }
 };
 
-let workCompleted = false;
+const createOtherCard = (restaurant, rating, distance = 0) => {
+  let card = document.createElement("div");
+  card.classList.add("other-card");
+  const image = document.createElement("div");
+  image.classList.add("other-card__image");
+  image.style.backgroundImage = `url(${restaurant.image})`;
+  card.appendChild(image);
 
-export const selectNearbyRestaurants = async () => {
-  const getNearbyRestaurantsPromise = async () => {
-    let cards = [];
-    categoryHeader.innerText = "Nearby Stars";
+  const info = document.createElement("div");
+  info.classList.add("other-card__info");
 
-    farRestaurantList.length = 0;
-    otherRestaurantList.length = 0;
+  const name = document.createElement("p");
+  name.classList.add("restaurant-card__name");
+  name.innerText = restaurant.name;
+  info.appendChild(name);
 
-    for (const restaurant of restaruantList) {
-      const locale = await getCoordinates(
-        restaurant.location.city,
-        restaurant.location.state
-      );
+  const tag = document.createElement("p");
+  tag.classList.add("restaurant-card__tag");
+  tag.innerText = restaurant.type;
+  info.appendChild(tag);
 
-      const userLocation = {
-        lat: lat,
-        lon: long,
-      };
+  const infoSub = document.createElement("div");
+  infoSub.classList.add("other-card__info__info");
 
-      const distance = await getDistance(userLocation, locale);
-      let menuTags = [];
+  const ratingContainer = document.createElement("div");
+  ratingContainer.classList.add("restaurant-card__rating__sub");
+  ratingContainer.textContent = `${rating.toFixed(1)} ⭐`;
+  infoSub.appendChild(ratingContainer);
 
-      if (distance <= 250) {
-        const likes = restaurant.popularity.likes;
-        const dislikes = restaurant.popularity.dislikes;
-        const percentageLikes = (likes / (likes + dislikes)) * 100;
-        const rating = 1 + (percentageLikes / 100) * 4;
+  info.appendChild(infoSub);
+  card.appendChild(info);
+  return card;
+};
 
-        if (rating >= 3.8) {
-          restaurant.menu.forEach((menuItem) => {
-            menuItem.tags.forEach((tag) => {
-              menuTags.push(tag.toLowerCase());
-            });
-          });
+export const selectNearbyRestaurants = async (searchString = "") => {
+  let cards = [];
+  let other_cards = [];
 
-          if (
-            searchString === "" ||
-            menuTags.includes(searchString) ||
-            restaurant.type.toLowerCase() == searchString
-          ) {
-            let card = document.createElement("div");
-            card.classList.add("restaurant-card");
+  CATEGORY_HEADER.innerText = "Nearby Stars";
 
-            card.dataset.restaurantID = restaurant.id;
+  farRestaurantList.length = 0;
+  otherRestaurantList.length = 0;
 
-            let image = document.createElement("div");
-            image.classList.add("restaurant-card__image");
-            image.style.backgroundImage = `url(${restaurant.image})`;
-            card.appendChild(image);
-
-            let container = document.createElement("div");
-            container.classList.add("restaurant-card__container");
-
-            let nameContainer = document.createElement("div");
-            nameContainer.classList.add("restaurant-card__name__container");
-
-            let restaurantName = document.createElement("p");
-            restaurantName.classList.add("restaurant-card__name");
-            restaurantName.innerText = restaurant.name;
-            nameContainer.appendChild(restaurantName);
-
-            let ratingContainer = document.createElement("div");
-            ratingContainer.classList.add("restaurant-card__rating__container");
-
-            ratingContainer.textContent = `⭐ ${String(rating.toFixed(1))}`;
-
-            container.appendChild(nameContainer);
-            container.appendChild(ratingContainer);
-
-            card.appendChild(container);
-            cards.push(card);
-          }
-        } else {
-          otherRestaurantList.push(restaurant);
-        }
-      } else {
-        farRestaurantList.push(restaurant);
-      }
-      workCompleted = true;
-    }
-    return cards;
+  const userLocation = {
+    lat: lat,
+    lon: long,
   };
-  const cards = await getNearbyRestaurantsPromise();
 
-  if (workCompleted) {
-    processCards(cards);
-    processOtherRestaurants();
+  for (const restaurant of restaruantList) {
+    const locale = await getCoordinates(
+      restaurant.location.city,
+      restaurant.location.state
+    );
+    const distance = await getDistance(userLocation, locale);
+
+    const menuTags = restaurant.menu
+      .map((menuItem) => menuItem.tags.map((tag) => tag.toLowerCase()))
+      .flat();
+
+    const percentageLikes =
+      (restaurant.popularity.likes /
+        (restaurant.popularity.likes + restaurant.popularity.dislikes)) *
+      100;
+    const rating = 1 + (percentageLikes / 100) * 4;
+
+    if (distance <= DISTANCE_LIMIT) {
+      if (
+        rating >= RATING_THRESHOLD &&
+        (searchString === "" ||
+          menuTags.includes(searchString) ||
+          restaurant.type.toLowerCase() === searchString)
+      ) {
+        const card = createRestaurantCard(restaurant, rating);
+        cards.push(card);
+      } else {
+        const card = createOtherCard(restaurant, rating, distance);
+        other_cards.push(card);
+      }
+    } else {
+      farRestaurantList.push(restaurant);
+    }
+
+    if (cards.length > 1) {
+      processCards(cards);
+      processOtherRestaurants(other_cards);
+    }
   }
 };
 
 const processCards = (cardArray) => {
-  console.log("Process Cards Called");
-  mainListing.innerHTML = "";
+  MAIN_LISTING.innerHTML = "";
   for (let card of cardArray) {
     card.addEventListener("click", () => {
       console.log(card.dataset.restaurantID);
     });
-    mainListing.appendChild(card);
+    MAIN_LISTING.appendChild(card);
   }
 };
 

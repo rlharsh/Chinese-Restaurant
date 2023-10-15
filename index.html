@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Meyer Reset -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.css"
+      integrity="sha512-IJEbgDEF7OeKJRa0MY2PApnyJHRIsgzCveek4ec8VWQ+7KG3ZSKVNYa5xP/Gh0hVP0Mwb+gBsk+GwR3JQGhQNg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+      integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="./assets/css/index.css" />
+
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Asian Express</title>
+  </head>
+  <body>
+    <!-- Begin Main Application Wrapper -->
+    <main class="app" id="application">
+      <header class="app__header" id="primary-header">
+        <!-- Begin Runner -->
+        <section class="runner">
+          <!-- Begin Location Section -->
+          <div class="location">
+            <p>DELIVER TO</p>
+            <div class="location__to">
+              <p class="large">home</p>
+              <button class="dropdown">
+                <img src="./assets/images/polygon.png" />
+              </button>
+            </div>
+          </div>
+          <!-- End Location Section -->
+          <!-- Begin ICONS -->
+          <div class="icons">
+            <i class="fa-regular fa-heart icon icon--heart"></i>
+            <i class="fa-solid fa-clock-rotate-left icon icon--history"></i>
+          </div>
+          <!-- End ICONS-->
+        </section>
+        <!-- End Runner -->
+        <!-- Begin Search -->
+        <section id="search" class="search">
+          <input
+            type="text"
+            name="search"
+            id="search"
+            class="input"
+            placeholder="What is your stomach craving?"
+          />
+          <i class="fa-solid fa-magnifying-glass icon icon--search"></i>
+        </section>
+        <!-- Begin Category Section-->
+        <section class="category">
+          <button class="nav-button nav-button--selected" id="nav-nearby">
+            <i class="fa-solid fa-map-pin icon icon--nav"></i>
+            <p class="nav-button__text">Nearby</p>
+          </button>
+          <button class="nav-button">
+            <i class="fa-regular fa-star icon icon--nav" id="nav-favorite"></i>
+            <p class="nav-button__text">Favorite</p>
+          </button>
+          <button class="nav-button">
+            <i class="fa-solid fa-tag icon icon--nav" id="nav-deals"></i>
+            <p class="nav-button__text">Deals</p>
+          </button>
+          <button class="nav-button">
+            <i
+              class="fa-solid fa-table-cells-large icon icon--nav"
+              id="nav-other"
+            ></i>
+            <p class="nav-button__text">Other</p>
+          </button>
+        </section>
+        <!-- End Category Section -->
+        <!-- End Search -->
+      </header>
+      <!-- Begin Category Section -->
+      <section class="category-listing-container">
+        <h2 class="category-listing-container__heading"></h2>
+        <div class="main-listing" id="main-listing">
+          <div class="skeleton-loader">
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
+            <!-- ... repeat as many times as you want -->
+          </div>
+        </div>
+      </section>
+      <section class="more-restaurants" id="more-restaurants">
+        <h2 class="category-listing-container__heading">More Restaurants</h2>
+        <div
+          class="more-restaurants-listing"
+          id="more-restaurants-listing"
+        ></div>
+      </section>
+    </main>
+    <!-- End Main Application Wrapper -->
+    <!-- Main JavaScript File -->
+    <script type="module" src="./assets/js/index.js"></script>
+  </body>
+</html>

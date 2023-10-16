@@ -1,4 +1,10 @@
+body {
+    background-color: rgb(236, 236, 236);
+}
+
 .app {
+    border-radius: 2rem;
+    background-color: #fff;
     max-width: 375px;
     margin: 0 auto;
     font-family: 'Poppins', sans-serif;
@@ -217,10 +223,6 @@
     justify-content: right;
 }
 
-.restaurant-card__rating__sub {
-
-}
-
 .restaurant-card__name {
     color: #443734;
     font-weight: 700;
@@ -295,6 +297,7 @@
 
 .other-card__image {
     min-height: 5rem;
+    max-height: 5rem;
     min-width: 5rem;
     flex: 5rem;
     flex-grow: 0;

@@ -6,6 +6,7 @@ const MORE_RESTAURANTS = document.getElementById("more-restaurants-listing");
 const SEARCH_ELEMENT = document.getElementsByName("search")[0];
 const RATING_THRESHOLD = 3.6;
 const DISTANCE_LIMIT = 220;
+const MODAL_DETAILS = document.getElementById("modal-details");
 
 SEARCH_ELEMENT.addEventListener("keyup", (event) => {
   if (event.key === "Enter") {
@@ -89,6 +90,7 @@ const processOtherRestaurants = (cards) => {
 const createOtherCard = (restaurant, rating, distance = 0) => {
   let card = document.createElement("div");
   card.classList.add("other-card");
+  card.dataset.restaurantID = restaurant.id;
   const image = document.createElement("div");
   image.classList.add("other-card__image");
   image.style.backgroundImage = `url(${restaurant.image})`;
@@ -136,7 +138,7 @@ const createOtherCard = (restaurant, rating, distance = 0) => {
   });
 
   const milesText = document.createElement("p");
-  milesText.textContent = `${distance.toFixed(1)}`;
+  milesText.textContent = `${distance.toFixed(1)} mi`;
   miles.appendChild(milesText);
 
   infoSub.appendChild(miles);
@@ -144,7 +146,17 @@ const createOtherCard = (restaurant, rating, distance = 0) => {
   info.appendChild(infoSub);
   info.appendChild(slugContainer);
   card.appendChild(info);
+  card.addEventListener("click", () => {
+    setModalDetails(restaurant);
+  });
   return card;
+};
+
+const setModalDetails = (id) => {
+  console.log(id);
+  MODAL_DETAILS.classList.remove("modal-restaurant__hidden");
+  const modalImage = document.getElementById("modal-details-image");
+  modalImage.style.backgroundImage = `url(${id.image})`;
 };
 
 export const selectNearbyRestaurants = async (searchString = "") => {

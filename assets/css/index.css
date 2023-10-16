@@ -309,10 +309,32 @@
     display: flex;
     flex-direction: column;
     flex: 80%;
-    gap: .2rem;
 }
 
 .other-card__info__info {
     margin-top: .4rem;
     display: flex;
+    gap: .4rem;
+}
+
+.distance {
+    display: flex;
+    gap: 0.25rem;
+}
+
+.restaurant-card__tag {
+    color: #6D758C;
+}
+
+.slug-container {
+    margin-top: .5rem;
+    display: flex;
+    gap: .3rem;
+}
+
+.slug {
+    background-color: #d4d5dd;
+    padding: .5rem;
+    border-radius: .375rem;
+    color: #6D758C;
 }

@@ -5,7 +5,7 @@ const CATEGORY_HEADER = document.querySelector(
 const MORE_RESTAURANTS = document.getElementById("more-restaurants-listing");
 const SEARCH_ELEMENT = document.getElementsByName("search")[0];
 const RATING_THRESHOLD = 3.6;
-const DISTANCE_LIMIT = 250;
+const DISTANCE_LIMIT = 220;
 
 SEARCH_ELEMENT.addEventListener("keyup", (event) => {
   if (event.key === "Enter") {
@@ -47,8 +47,6 @@ export const processCategory = (category) => {
       break;
   }
 };
-
-let workCompleted = false;
 
 const createRestaurantCard = (restaurant, rating) => {
   const card = document.createElement("div");
@@ -117,7 +115,34 @@ const createOtherCard = (restaurant, rating, distance = 0) => {
   ratingContainer.textContent = `${rating.toFixed(1)} ⭐`;
   infoSub.appendChild(ratingContainer);
 
+  const miles = document.createElement("div");
+  miles.classList.add("distance");
+  const milesIcon = document.createElement("i");
+  milesIcon.classList.add("fa-solid");
+  milesIcon.classList.add("fa-map-pin");
+  milesIcon.classList.add("small-icon");
+  miles.appendChild(milesIcon);
+
+  const slugContainer = document.createElement("div");
+  slugContainer.classList.add("slug-container");
+
+  const typeTags = JSON.parse(restaurant.slugs);
+  typeTags.forEach((type) => {
+    const slug = document.createElement("p");
+    slug.classList.add("slug");
+
+    slug.innerText = type;
+    slugContainer.appendChild(slug);
+  });
+
+  const milesText = document.createElement("p");
+  milesText.textContent = `${distance.toFixed(1)}`;
+  miles.appendChild(milesText);
+
+  infoSub.appendChild(miles);
+
   info.appendChild(infoSub);
+  info.appendChild(slugContainer);
   card.appendChild(info);
   return card;
 };
@@ -141,7 +166,7 @@ export const selectNearbyRestaurants = async (searchString = "") => {
       restaurant.location.city,
       restaurant.location.state
     );
-    const distance = await getDistance(userLocation, locale);
+    const distance = Math.floor(Math.random() * (250 - 200 + 1) + 200); //await getDistance(userLocation, locale);
 
     const menuTags = restaurant.menu
       .map((menuItem) => menuItem.tags.map((tag) => tag.toLowerCase()))
@@ -167,10 +192,11 @@ export const selectNearbyRestaurants = async (searchString = "") => {
         other_cards.push(card);
       }
     } else {
-      farRestaurantList.push(restaurant);
+      const card = createOtherCard(restaurant, rating, distance);
+      other_cards.push(card);
     }
 
-    if (cards.length > 1) {
+    if (cards.length > 1 || other_cards.length > 1) {
       processCards(cards);
       processOtherRestaurants(other_cards);
     }

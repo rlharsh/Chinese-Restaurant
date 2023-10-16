@@ -7,6 +7,12 @@ const SEARCH_ELEMENT = document.getElementsByName("search")[0];
 const RATING_THRESHOLD = 3.6;
 const DISTANCE_LIMIT = 220;
 const MODAL_DETAILS = document.getElementById("modal-details");
+const MODAL_DETAILS_BACK = document.getElementById("nav-back");
+
+MODAL_DETAILS_BACK.addEventListener("click", (event) => {
+  event.preventDefault();
+  MODAL_DETAILS.classList.add("modal-restaurant__hidden");
+});
 
 SEARCH_ELEMENT.addEventListener("keyup", (event) => {
   if (event.key === "Enter") {
@@ -154,6 +160,8 @@ const createOtherCard = (restaurant, rating, distance = 0) => {
 
 const setModalDetails = (id) => {
   console.log(id);
+  document.body.scrollTop = document.documentElement.scrollTop = 0;
+
   MODAL_DETAILS.classList.remove("modal-restaurant__hidden");
   const modalImage = document.getElementById("modal-details-image");
   modalImage.style.backgroundImage = `url(${id.image})`;
